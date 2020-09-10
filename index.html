@@ -1,0 +1,97 @@
+<html>
+  <head></head>
+  <body>
+    <div id="message" style="width: fit-content; padding-right: 20px"></div>
+    <input type="number" id="inputNumber" />
+    <button id="guessButton">Guess</button>
+    <button id="resetButton">Reset</button>
+    <div id="passGuessesContainer" style="padding-top: 10px">
+      <span style="font-weight: bold">Pass guesses: </span>
+      <span id="passGuessesList"></span>
+    </div>
+    <script>
+      let randomValue = Math.floor(Math.random() * 101);
+      console.log(randomValue);
+      let remainGuess = 10;
+      let passGuesses = [];
+
+      const passGuessesContainer = document.getElementById(
+        'passGuessesContainer'
+      );
+      passGuessesContainer.style.visibility = 'hidden';
+
+      const inputNumber = document.getElementById('inputNumber');
+
+      const guessButton = document.getElementById('guessButton');
+      guessButton.addEventListener('click', function () {
+        const input = inputNumber.value;
+        //check input empty
+        if (input) {
+          const userGuess = Number(input);
+          //check is integer
+          if (userGuess !== null && userGuess === parseInt(userGuess, 10)) {
+            --remainGuess;
+            passGuesses.push(userGuess);
+            passGuessesContainer.style.visibility = 'visible';
+            document.getElementById('passGuessesList').innerHTML =
+              '[' + passGuesses + ']';
+            let message = '';
+            let color = '';
+            if (userGuess < randomValue) {
+              message =
+                'Sorry your guess is too low. You have ' +
+                remainGuess +
+                ' guesses left';
+              color = 'red';
+              if (remainGuess <= 0) {
+                finishGame();
+              }
+            } else if (userGuess === randomValue) {
+              message = 'Congratulations!! You guessed correctly.';
+              color = '#78df5e';
+              finishGame();
+            } else {
+              message =
+                'Sorry your guess is too high. You have ' +
+                remainGuess +
+                ' guesses left';
+              color = 'red';
+              if (remainGuess <= 0) {
+                finishGame();
+              }
+            }
+            document.getElementById('message').innerHTML = message;
+            document.getElementById('message').style.backgroundColor = color;
+          } else {
+            alert('You must input an integer!');
+          }
+        } else {
+          alert('Please input!');
+        }
+      });
+
+      const resetButton = document.getElementById('resetButton');
+      resetButton.addEventListener('click', function () {
+        resetButton.style.visibility = 'hidden';
+        guessButton.disabled = false;
+        inputNumber.disabled = false;
+        inputNumber.value = '';
+        passGuessesContainer.style.visibility = 'hidden';
+        remainGuess = 10;
+        passGuesses = [];
+        randomValue = Math.floor(Math.random() * 101);
+        console.log(randomValue);
+        document.getElementById('message').innerHTML = '';
+        document.getElementById('message').style.backgroundColor =
+          'transparent';
+      });
+      resetButton.style.visibility = 'hidden';
+
+      function finishGame() {
+        guessButton.disabled = true;
+        inputNumber.disabled = true;
+        resetButton.style.visibility = 'visible';
+      }
+    </script>
+  </body>
+</html>
